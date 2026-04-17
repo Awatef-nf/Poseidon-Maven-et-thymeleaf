@@ -35,9 +35,10 @@ public class BidListController {
 
     @PostMapping("/bidList/validate")
     public String saveBidList(
-            @Valid  BidList bidList,
-            @ModelAttribute(name ="bidList")
-            BindingResult bindingResult
+            @Valid
+            @ModelAttribute(name ="bidList")BidList bidList,
+            BindingResult bindingResult,
+            Model model
     ){
         if(bindingResult.hasErrors()){
             return "bidList/add";
@@ -65,8 +66,6 @@ public class BidListController {
             model.addAttribute("bidList", bidList);
             return "bidList/update";
         }
-
-        bidList.setBidListId(id);
         bidListService.addBidlist(bidList);
         return "redirect:/bidList/list";
     }

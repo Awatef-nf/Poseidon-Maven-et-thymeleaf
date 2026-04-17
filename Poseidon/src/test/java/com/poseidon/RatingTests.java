@@ -17,28 +17,53 @@ public class RatingTests {
 	@Autowired
 	private RatingRepository ratingRepository;
 
+
 	@Test
-	public void ratingTest() {
+	void saveRatingTest() {
 		Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
 
-		// Save
-		rating = ratingRepository.save(rating);
-		assertNotNull(rating.getId());
-		assertTrue(rating.getOrderNumber() == 10);
+		Rating saved = ratingRepository.save(rating);
 
-		// Update
+		assertNotNull(saved.getId());
+		assertEquals(10, saved.getOrderNumber());
+	}
+
+	@Test
+	void updateRatingTest() {
+
+		Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
+		rating = ratingRepository.save(rating);
+
+		Integer id = rating.getId();
+
 		rating.setOrderNumber(20);
-		rating = ratingRepository.save(rating);
-		assertTrue(rating.getOrderNumber() == 20);
+		ratingRepository.save(rating);
 
-		// Find
+		Rating updated = ratingRepository.findById(id).orElseThrow();
+
+		assertEquals(20, updated.getOrderNumber());
+	}
+
+	@Test
+	void findAllRatingsTest() {
+		Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
+		ratingRepository.save(rating);
+
 		List<Rating> listResult = ratingRepository.findAll();
-		assertTrue(listResult.size() > 0);
 
-		// Delete
+		assertTrue(listResult.size() > 0);
+	}
+
+	@Test
+	void deleteRatingTest() {
+		Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
+		rating = ratingRepository.save(rating);
+
 		Integer id = rating.getId();
 		ratingRepository.delete(rating);
-		Optional<Rating> ratingList = ratingRepository.findById(id);
-		assertFalse(ratingList.isPresent());
+
+		Optional<Rating> deleted = ratingRepository.findById(id);
+
+		assertFalse(deleted.isPresent());
 	}
 }

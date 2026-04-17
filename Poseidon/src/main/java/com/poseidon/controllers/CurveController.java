@@ -53,13 +53,15 @@ public class CurveController {
     }
 
     @PostMapping("/curvePoint/update/{id}")
-    public String saveUpdateCurve(@PathVariable Integer id, @Valid CurvePoint curvePoint,
-                             BindingResult result, Model model) {
+    public String saveUpdateCurve(@PathVariable Integer id,
+                                  @Valid CurvePoint curvePoint,
+                                  BindingResult result,
+                                  Model model) {
         if(result.hasErrors()){
             model.addAttribute("curvePoint",curvePoint);
             return "curvePoint/update";
         }
-        curvePoint.setCurveId(id);
+        curvePoint.setId(id);
         curvePointService.addCurvePoint(curvePoint);
         return "redirect:/curvePoint/list";
     }
