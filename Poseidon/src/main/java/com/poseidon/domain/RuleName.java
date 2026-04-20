@@ -43,6 +43,12 @@ public class RuleName {
         this.sqlPart = sqlPart;
     }
 
+    public RuleName(String name, String description, String json) {
+        this.name = name;
+        this.description = description;
+        this.json = json;
+    }
+
     public RuleName() {
 
     }

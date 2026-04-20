@@ -1,6 +1,5 @@
-package com.poseidon;
+package com.poseidon.domain;
 
-import com.poseidon.domain.Trade;
 import com.poseidon.repositories.TradeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

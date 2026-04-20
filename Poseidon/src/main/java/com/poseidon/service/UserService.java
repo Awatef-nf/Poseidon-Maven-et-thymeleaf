@@ -24,7 +24,7 @@ public class UserService {
 
     public User findById(Integer id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new ClassCastException("Invalid user Id: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + id));
     }
 
     public void deleteById(Integer id) {

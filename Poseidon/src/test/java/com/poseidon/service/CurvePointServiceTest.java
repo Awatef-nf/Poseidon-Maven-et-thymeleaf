@@ -32,44 +32,38 @@ class CurvePointServiceTest {
 
     }
 
+    @Test
+    void findByIdTest(){
+        CurvePoint curv = new CurvePoint(1,12.2,22.5);
+        curv.setId(1);
+
+        when(curvePointRepository.findById(1)).thenReturn(Optional.of(curv));
+
+        CurvePoint result = curvePointService.findById(1);
+        assertEquals(1, result.getId());
+    }
+
+    @Test
+    void FindByIDNotFoundTest() {
+        when(curvePointRepository.findById(1)).thenReturn(Optional.empty());
+        assertThrows(IllegalArgumentException.class, () -> {
+            curvePointService.findById(1);
+        });
+    }
+
+    @Test
+    void addCurvePointTest(){
+        CurvePoint curve = new CurvePoint(1,12.34,23.1);
+        curvePointService.addCurvePoint(curve);
+        verify(curvePointRepository,times(1)).save(curve);
+
+    }
+
+   @Test
+    void deleteByIdTest(){
+        curvePointService.deleteById(1);
+        verify(curvePointRepository, times(1)).deleteById(1);
+   }
+
 
 }
-
-//
-//    @Test
-//    void findByIdTest() {
-//        BidList bid = new BidList("Account", "Type", 10d);
-//        bid.setBidListId(1);
-//
-//        when(bidListRepository.findById(1)).thenReturn(Optional.of(bid));
-//
-//        BidList result = bidListService.findById(1);
-//
-//        assertNotNull(result);
-//        assertEquals(1, result.getBidListId());
-//    }
-//
-//    @Test
-//    void findByIdNotFoundTest() {
-//        when(bidListRepository.findById(1)).thenReturn(Optional.empty());
-//
-//        assertThrows(IllegalArgumentException.class, () -> {
-//            bidListService.findById(1);
-//        });
-//    }
-//
-//    @Test
-//    void addBidListTest() {
-//        BidList bid = new BidList("Account", "Type", 10d);
-//
-//        bidListService.addBidlist(bid);
-//
-//        verify(bidListRepository, times(1)).save(bid);
-//    }
-//
-//    @Test
-//    void deleteByIdTest() {
-//        bidListService.deleteById(1);
-//
-//        verify(bidListRepository, times(1)).deleteById(1);
-//    }

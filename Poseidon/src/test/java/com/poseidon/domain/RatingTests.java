@@ -1,6 +1,5 @@
-package com.poseidon;
+package com.poseidon.domain;
 
-import com.poseidon.domain.Rating;
 import com.poseidon.repositories.RatingRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,6 @@
-package com.poseidon;
+package com.poseidon.domain;
 
 
-import com.poseidon.domain.RuleName;
 import com.poseidon.repositories.RuleNameRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

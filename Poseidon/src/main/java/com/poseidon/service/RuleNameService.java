@@ -6,11 +6,13 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RuleNameService {
     @Autowired
     private RuleNameRepository ruleNameRepository;
-    public Object findAll() {
+    public List<RuleName> findAll() {
         return  ruleNameRepository.findAll();
     }
 

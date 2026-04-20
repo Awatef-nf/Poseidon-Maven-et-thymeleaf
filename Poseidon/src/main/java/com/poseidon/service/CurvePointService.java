@@ -22,8 +22,8 @@ public class CurvePointService {
     }
 
     public CurvePoint findById(Integer id) {
-        return curvePointRepository.getReferenceById(id);
-//                .orElseThrow(() -> new IllegalArgumentException("Invalid curve Id: "+id));
+        return curvePointRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid curve Id: " + id));
     }
 
     public void deleteById(Integer id) {

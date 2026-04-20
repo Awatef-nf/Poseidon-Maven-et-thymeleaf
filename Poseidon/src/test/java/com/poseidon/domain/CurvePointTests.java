@@ -1,6 +1,5 @@
-package com.poseidon;
+package com.poseidon.domain;
 
-import com.poseidon.domain.CurvePoint;
 import com.poseidon.repositories.CurvePointRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
