@@ -6,12 +6,14 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CurvePointService {
     @Autowired
     private CurvePointRepository curvePointRepository;
 
-    public Object findAll() {
+    public List<CurvePoint> findAll() {
         return curvePointRepository.findAll();
     }
 

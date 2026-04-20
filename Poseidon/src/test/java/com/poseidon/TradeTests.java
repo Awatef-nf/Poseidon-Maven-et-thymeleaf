@@ -17,7 +17,7 @@ public class TradeTests {
 	@Autowired
 	private TradeRepository tradeRepository;
 
-	//@Test
+	@Test
 	public void tradeTest() {
 		Trade trade = new Trade("Trade Account", "Type");
 
