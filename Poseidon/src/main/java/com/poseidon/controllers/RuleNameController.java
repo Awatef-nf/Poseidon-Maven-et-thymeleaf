@@ -50,8 +50,9 @@ public class RuleNameController {
     }
 
     @PostMapping("/ruleName/update/{id}")
-    public String updateRuleName(@PathVariable Integer id, @Valid RuleName ruleName,
-                             BindingResult result, Model model) {
+    public String updateRuleName(@PathVariable Integer id,
+                                 @Valid @ModelAttribute("ruleName") RuleName ruleName,
+                                 BindingResult result, Model model) {
         if(result.hasErrors()){
             model.addAttribute("ruleName",ruleName);
             return "ruleName/update";

@@ -56,7 +56,7 @@ public class UserController {
 
     @PostMapping("/user/update/{id}")
     public String updateUser(@PathVariable Integer id,
-                             @Valid User user,
+                             @Valid @ModelAttribute("user") User user,
                              BindingResult result,
                              Model model) {
         if (result.hasErrors()) {

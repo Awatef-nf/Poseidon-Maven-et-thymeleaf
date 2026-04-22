@@ -34,17 +34,18 @@ public class BidListController {
     }
 
     @PostMapping("/bidList/validate")
-    public String saveBidList(
-            @Valid
-            @ModelAttribute(name ="bidList")BidList bidList,
-            BindingResult bindingResult,
-            Model model
-    ){
-        if(bindingResult.hasErrors()){
+    public String validate(
+            @Valid @ModelAttribute("bidList") BidList bidList,
+            BindingResult result,
+            Model model) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("bidList", bidList);
             return "bidList/add";
         }
+
         bidListService.addBidlist(bidList);
-        return"redirect:/bidList/list";
+        return "redirect:/bidList/list";
     }
 
     /* UpDate */
@@ -58,7 +59,7 @@ public class BidListController {
 
     @PostMapping("/bidList/update/{id}")
     public String saveUpdateBidList(@PathVariable Integer id,
-                                    @Valid BidList bidList,
+                                    @Valid @ModelAttribute(name="bidList") BidList bidList,
                                     BindingResult bindingResult,
                                     Model model) {
 

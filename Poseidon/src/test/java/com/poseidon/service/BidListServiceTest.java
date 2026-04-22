@@ -29,7 +29,8 @@ class BidListServiceTest {
         BidList bid2 = new BidList("Account2", "Type2", 20d);
 
         when(bidListRepository.findAll()).thenReturn(Arrays.asList(bid1, bid2));
-
+        assertEquals("Account1", bid1.getAccount());
+        assertEquals(20,bid2.getBidQuantity());
         assertEquals(2, bidListService.findAll().size());
     }
 

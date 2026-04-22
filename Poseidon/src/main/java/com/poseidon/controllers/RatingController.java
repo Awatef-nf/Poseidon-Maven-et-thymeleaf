@@ -53,7 +53,7 @@ public class RatingController {
 
     @PostMapping("/rating/update/{id}")
     public String updateRating(@PathVariable Integer id,
-                               @Valid Rating rating,
+                               @Valid @ModelAttribute("rating") Rating rating,
                                BindingResult result,
                                Model model) {
 
