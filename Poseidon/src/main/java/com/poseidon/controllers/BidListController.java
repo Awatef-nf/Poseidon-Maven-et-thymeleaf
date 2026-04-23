@@ -51,10 +51,13 @@ public class BidListController {
     /* UpDate */
     @GetMapping("/bidList/update/{id}")
     public String showUpdateBidList(@PathVariable Integer id, Model model) {
-
-        BidList bidList = bidListService.findById(id);
-        model.addAttribute("bidList", bidList);
-        return "bidList/update";
+        try {
+            BidList bidList = bidListService.findById(id);
+            model.addAttribute("bidList", bidList);
+            return "bidList/update";
+        } catch (IllegalArgumentException e) {
+            return "redirect:/bidList/list";
+        }
     }
 
     @PostMapping("/bidList/update/{id}")
@@ -67,14 +70,20 @@ public class BidListController {
             model.addAttribute("bidList", bidList);
             return "bidList/update";
         }
+        bidList.setBidListId(id);
         bidListService.addBidlist(bidList);
         return "redirect:/bidList/list";
     }
 
     /* Delete */
+
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable Integer id) {
-        bidListService.deleteById(id);
+        try {
+            bidListService.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            System.out.println(" not valid id ");;
+        }
         return "redirect:/bidList/list";
     }
 }

@@ -10,6 +10,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.never;
@@ -27,17 +29,21 @@ class CurveControllerTest {
     @MockitoBean
     private CurvePointService curvePointService;
 
-
+    // GET tests List
     @WithMockUser
     @Test
     void getCurvePointList() throws Exception{
+        CurvePoint curve = new CurvePoint(1,12.22,45.5);
         when(curvePointService.findAll()).thenReturn(List.of(new CurvePoint()));
-
         mockMvc.perform(get("/curvePoint/list"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("curvePoint/list"))
-                .andExpect(model().attributeExists("curvePoints"));
+                .andExpect(model().attributeExists("curvePoints"))
+                .andExpect(model().attribute("curvePoints",hasSize(1)));
+        verify(curvePointService).findAll();
     }
+
+    //Get add
     @WithMockUser
     @Test
     void showAddForm() throws Exception{
@@ -47,27 +53,7 @@ class CurveControllerTest {
                 .andExpect(model().attributeExists("curvePoint"));
     }
 
-    @WithMockUser
-    @Test
-    void showUpdateForm() throws Exception{
-        CurvePoint curve = new CurvePoint(1,12.54,11.12);
-        when(curvePointService.findById(1)).thenReturn(curve);
-
-        mockMvc.perform(get("/curvePoint/update/1"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("curvePoint/update"))
-                .andExpect(model().attributeExists("curvePoint"));
-    }
-
-    @WithMockUser
-    @Test
-    void deleteCurvePoint() throws Exception {
-        mockMvc.perform(get("/curvePoint/delete/1"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/curvePoint/list"));
-        verify(curvePointService).deleteById(1);
-
-    }
+    // POST validate
     @Test
     @WithMockUser
     void validate_shouldRedirect_whenValidInput() throws Exception {
@@ -81,7 +67,6 @@ class CurveControllerTest {
 
         verify(curvePointService, times(1)).addCurvePoint(any(CurvePoint.class));
     }
-
 
     @Test
     @WithMockUser
@@ -99,6 +84,33 @@ class CurveControllerTest {
         verify(curvePointService, never()).addCurvePoint(any());
     }
 
+    //Get update
+    @WithMockUser
+    @Test
+    void showUpdateForm_shouldReturnUpdateView_whenIdExists() throws Exception{
+        CurvePoint curve = new CurvePoint(1,12.54,11.12);
+        when(curvePointService.findById(1)).thenReturn(curve);
+
+        mockMvc.perform(get("/curvePoint/update/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("curvePoint/update"))
+                .andExpect(model().attributeExists("curvePoint"));
+        verify(curvePointService).findById(1);
+    }
+
+    @WithMockUser
+    @Test
+    void showUpdateForm_shouldRedirect_whenIdNotFound() throws Exception {
+        when(curvePointService.findById(99)).thenThrow(new IllegalArgumentException("BidList not found"));
+
+        mockMvc.perform(get("/curvePoint/update/99"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/curvePoint/list"));
+
+        verify(curvePointService).findById(99);
+    }
+
+    //Post update
     @Test
     @WithMockUser
     void saveUpdateCurve_shouldRedirect_whenValidInput() throws Exception {
@@ -130,4 +142,31 @@ class CurveControllerTest {
 
         verify(curvePointService, never()).addCurvePoint(any());
     }
+
+
+    //Get delete
+    @WithMockUser
+    @Test
+    void deleteCurvePoint() throws Exception {
+        mockMvc.perform(get("/curvePoint/delete/1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/curvePoint/list"));
+
+        verify(curvePointService).deleteById(1);
+
+    }
+
+    @WithMockUser
+    @Test
+    void deleteBidList_shouldRedirect_whenIdNotFound() throws Exception {
+        doThrow(new IllegalArgumentException("BidList not found"))
+                .when(curvePointService).deleteById(99);
+
+        mockMvc.perform(get("/curvePoint/delete/99"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/curvePoint/list"));
+
+        verify(curvePointService).deleteById(99);
+    }
+
 }

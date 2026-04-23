@@ -47,9 +47,13 @@ public class CurveController {
     /* UpDate */
     @GetMapping("/curvePoint/update/{id}")
     public String showUpDateCurve(@PathVariable Integer id, Model model) {
-        CurvePoint curvePoint = curvePointService.findById(id);
-        model.addAttribute("curvePoint",curvePoint);
-        return "curvePoint/update";
+        try {
+            CurvePoint curvePoint = curvePointService.findById(id);
+            model.addAttribute("curvePoint", curvePoint);
+            return "curvePoint/update";
+        } catch (IllegalArgumentException e){
+            return "redirect:/curvePoint/list";
+        }
     }
 
     @PostMapping("/curvePoint/update/{id}")
@@ -68,7 +72,11 @@ public class CurveController {
     /* Delete */
     @GetMapping("/curvePoint/delete/{id}")
     public String deleteCurve(@PathVariable Integer id, Model model) {
-        curvePointService.deleteById(id);
+        try {
+            curvePointService.deleteById(id);
+        }catch (IllegalArgumentException e){
+            System.out.println(" not valid id");
+        }
         return "redirect:/curvePoint/list";
     }
 }

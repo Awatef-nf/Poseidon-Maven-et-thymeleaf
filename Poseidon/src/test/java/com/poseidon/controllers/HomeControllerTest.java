@@ -31,11 +31,5 @@ class HomeControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/bidList/list"));
     }
-//    @WithMockUser(roles = "user")
-//    @Test
-//    void adminHome_shouldBeForbidden_forUserRole() throws Exception {
-//        mockMvc.perform(get("/admin/home"))
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(status().isForbidden());
-//    }
+
 }

@@ -46,9 +46,13 @@ public class RatingController {
     /* UpDate */
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable Integer id, Model model) {
-        Rating rating = ratingService.findById(id);
-        model.addAttribute("rating", rating);
-        return "rating/update";
+        try {
+           Rating rate  = ratingService.findById(id);
+            model.addAttribute("rating", rate);
+            return "rating/update";
+        } catch (IllegalArgumentException e) {
+            return "redirect:/rating/list";
+        }
     }
 
     @PostMapping("/rating/update/{id}")
@@ -69,7 +73,11 @@ public class RatingController {
     /* Delete */
     @GetMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable Integer id, Model model) {
-        ratingService.deleteById(id);
+        try {
+            ratingService.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            System.out.println(" not valid id ");;
+        }
         return "redirect:/rating/list";
     }
 }
