@@ -1,5 +1,6 @@
 package com.poseidon.controllers;
 
+import com.poseidon.domain.Rating;
 import com.poseidon.domain.Trade;
 import com.poseidon.service.TradeService;
 import jakarta.validation.Valid;
@@ -30,7 +31,8 @@ public class TradeController {
     }
 
     @PostMapping("/trade/validate")
-    public String validate(@Valid @ModelAttribute("trade") Trade trade,
+    public String validate(@Valid
+                           @ModelAttribute("trade") Trade trade,
                            BindingResult result
                            ) {
 
@@ -43,9 +45,13 @@ public class TradeController {
 
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable Integer id, Model model) {
-       Trade trade =tradeService.findById(id);
-       model.addAttribute("trade",trade);
-        return "trade/update";
+        try {
+            Trade trade  = tradeService.findById(id);
+            model.addAttribute("trade", trade);
+            return "trade/update";
+        } catch (IllegalArgumentException e) {
+            return "redirect:/trade/list";
+        }
     }
 
     @PostMapping("/trade/update/{id}")
@@ -64,7 +70,11 @@ public class TradeController {
 
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable Integer id, Model model) {
-        tradeService.deleteById(id);
+        try {
+            tradeService.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            System.out.println(" not valid id ");;
+        }
         return "redirect:/trade/list";
     }
 }

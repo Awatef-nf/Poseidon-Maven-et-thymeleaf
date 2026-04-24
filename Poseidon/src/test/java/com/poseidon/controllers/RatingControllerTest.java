@@ -32,7 +32,7 @@ class RatingControllerTest {
     @MockitoBean
     private RatingService ratingService;
 
-    // GET /bidList/list
+    // GET //list
 
     @WithMockUser
     @Test
@@ -47,7 +47,7 @@ class RatingControllerTest {
                 .andExpect(model().attribute("ratings", hasSize(1))); // vérifie le contenu du modèle
         verify(ratingService).findAll();
     }
-    // GET /bidList/add
+    // GET /add
 
     @WithMockUser
     @Test
@@ -90,7 +90,7 @@ class RatingControllerTest {
         verify(ratingService, never()).addRating(any());
     }
 
-    // GET /bidList/update/{id}
+    // GET /update/{id}
 
     @WithMockUser
     @Test
@@ -118,7 +118,7 @@ class RatingControllerTest {
         verify(ratingService).findById(99);
     }
 
-    // POST /bidList/update/{id}
+    // POST/update/{id}
 
     @Test
     @WithMockUser
@@ -150,7 +150,7 @@ class RatingControllerTest {
         verify(ratingService, never()).addRating(any());
     }
 
-    // GET /bidList/delete/{id}
+    // GET delete/{id}
 
     @WithMockUser
     @Test
