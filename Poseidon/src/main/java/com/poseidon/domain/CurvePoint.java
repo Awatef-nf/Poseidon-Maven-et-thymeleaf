@@ -19,6 +19,7 @@ public class CurvePoint {
     @NotNull(message = "must not be null")
     private Integer curveId;
     private Double term;
+    @Column(name = "\"VALUE\"")
     private Double value;
     private Timestamp asOfDate;
     private Timestamp creationDate;
