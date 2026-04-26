@@ -49,9 +49,14 @@ public class UserController {
 
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable Integer id, Model model) {
-        User user = userService.findById(id);
-        model.addAttribute("user", user);
-        return "user/update";
+        try {
+            User user = userService.findById(id);
+            model.addAttribute("user", user);
+
+        }catch (Exception e){
+            System.out.println("erreur");
+        }return "user/update";
+
     }
 
     @PostMapping("/user/update/{id}")
@@ -73,7 +78,11 @@ public class UserController {
 
     @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable Integer id, Model model) {
-        userService.deleteById(id);
+        try {
+            userService.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return "redirect:/user/list";
     }
 }
