@@ -103,18 +103,22 @@ class CurveIT {
     //Post update
     @Test
     @WithMockUser(roles = "USER")
-    void UpdateCurve_shouldUpdateInDatabase_andRedirect_whenValidInput() throws Exception {
-        CurvePoint curve = curvePointRepository.save(new CurvePoint(1,10d,100d));
-        mockMvc.perform(post("/curvePoint/update/"+curve.getId())
+    void updateCurve_shouldUpdateInDatabase_andRedirect_whenValidInput() throws Exception {
+
+        CurvePoint curve = curvePointRepository.save(new CurvePoint(1, 10d, 100d));
+
+        mockMvc.perform(post("/curvePoint/update/" + curve.getId())
                         .param("curveId", "1")
-                        .param("term", "10")
-                        .param("value", "100.0")
+                        .param("term", "20")
+                        .param("value", "200.0")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/curvePoint/list"));
-        CurvePoint curveUpdated = curvePointRepository.findById((curve.getId())).orElseThrow();
-        assertThat(curveUpdated.getTerm()).isEqualTo(10d);
-        assertThat(curveUpdated.getValue()).isEqualTo(100d);
+
+        CurvePoint updated = curvePointRepository.findById(curve.getId()).orElseThrow();
+
+        assertThat(updated.getTerm()).isEqualTo(20d);
+        assertThat(updated.getValue()).isEqualTo(200d);
     }
 
     @Test
