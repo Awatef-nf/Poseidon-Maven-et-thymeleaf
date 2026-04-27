@@ -1,4 +1,4 @@
-package com.poseidon.integration;
+package com.poseidon.controllers;
 
 
 import com.poseidon.domain.BidList;
@@ -12,6 +12,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest                  // Charge tout le contexte Spring (controller + service + repository)
 @AutoConfigureMockMvc            // Simule les requêtes HTTP sans démarrer de serveur
-@ActiveProfiles("test")          // Utilise application-test.properties (H2)
+@ActiveProfiles("test")          // Utilise application-test.yaml (H2)
 class BidListIT {
 
     @Autowired
@@ -38,7 +39,7 @@ class BidListIT {
 
     // GET — lecture
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "USER") // un utilisateur
     void getBidList_shouldReturnListView_withBidsFromDatabase() throws Exception {
         // Arrange — on insère directement en base
         bidListRepository.save(new BidList("Account1", "Type1", 10.0));
@@ -48,11 +49,12 @@ class BidListIT {
         mockMvc.perform(get("/bidList/list"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bidList/list"))
-                .andExpect(model().attributeExists("bidLists"));
+                .andExpect(model().attributeExists("bidLists"))
+                .andExpect(model().attribute("bidLists", hasSize(2)));
     }
-
+    //GET ADD
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "USER")
     void showAddForm_shouldReturnAddView() throws Exception {
         mockMvc.perform(get("/bidList/add"))
                 .andExpect(status().isOk())
@@ -60,23 +62,10 @@ class BidListIT {
                 .andExpect(model().attributeExists("bidList"));
     }
 
-    @Test
-    @WithMockUser
-    void showUpdateForm_shouldReturnUpdateView_withBidFromDatabase() throws Exception {
-        // Arrange — on insère un bid réel en base
-        BidList saved = bidListRepository.save(new BidList("Account1", "Type1", 10.0));
-
-        // Act + Assert — on utilise l'id généré par la base
-        mockMvc.perform(get("/bidList/update/" + saved.getBidListId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("bidList/update"))
-                .andExpect(model().attributeExists("bidList"));
-    }
-
-    // POST — création (validate)
+    // POST  (validate)
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "USER")
     void validate_shouldPersistBidInDatabase_andRedirect_whenValidInput() throws Exception {
         // Act
         mockMvc.perform(post("/bidList/validate")
@@ -91,9 +80,22 @@ class BidListIT {
         assertThat(bidListRepository.findAll()).hasSize(1);
         assertThat(bidListRepository.findAll().get(0).getAccount()).isEqualTo("TestAccount");
     }
+    @Test
+    @WithMockUser(roles = "USER")
+    void showUpdateForm_shouldReturnUpdateView_withBidFromDatabase() throws Exception {
+        // Arrange — on insère un bid réel en base
+        BidList saved = bidListRepository.save(new BidList("Account1", "Type1", 10.0));
+
+        // Act + Assert — on utilise l'id généré par la base
+        mockMvc.perform(get("/bidList/update/" + saved.getBidListId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("bidList/update"))
+                .andExpect(model().attributeExists("bidList"));
+    }
+
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "USER")
     void validate_shouldNotPersist_andReturnAddView_whenValidationFails() throws Exception {
         // Act
         mockMvc.perform(post("/bidList/validate")
@@ -112,7 +114,7 @@ class BidListIT {
     // POST — mise à jour (update)
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "USER")
     void updateBidList_shouldUpdateInDatabase_andRedirect_whenValidInput() throws Exception {
         //  on insère un bid existant
         BidList saved = bidListRepository.save(new BidList("OldAccount", "OldType", 5.0));
@@ -133,7 +135,7 @@ class BidListIT {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "USER")
     void updateBidList_shouldNotUpdate_andReturnUpdateForm_whenInvalidInput() throws Exception {
         // Arrange
         BidList saved = bidListRepository.save(new BidList("OldAccount", "OldType", 5.0));
@@ -156,7 +158,7 @@ class BidListIT {
     // DELETE
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "USER")
     void deleteBidList_shouldRemoveFromDatabase_andRedirect() throws Exception {
         // Arrange
         BidList saved = bidListRepository.save(new BidList("Account1", "Type1", 10.0));
