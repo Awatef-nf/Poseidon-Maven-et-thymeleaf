@@ -17,6 +17,9 @@ spring:
                 dialect: org.hibernate.dialect.MySQL8Dialect
 
     security:
-        user:
-            name: awatef
-            password: poseidon
+        oauth2:
+            client:
+                registration:
+                    github:
+                        client-id:
+                        client-secret:

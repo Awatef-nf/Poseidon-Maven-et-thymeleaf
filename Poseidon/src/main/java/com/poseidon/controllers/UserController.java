@@ -33,17 +33,19 @@ public class UserController {
     }
 
     @PostMapping("/user/validate")
-    public String validate(@Valid
-                           @ModelAttribute(name = "user") User user,
+    public String validate(@Valid @ModelAttribute User user,
                            BindingResult result,
                            Model model) {
+
         if (result.hasErrors()) {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            user.setPassword(encoder.encode(user.getPassword()));
-            model.addAttribute("user",user);
             return "user/add";
         }
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(encoder.encode(user.getPassword()));
+
         userService.addUser(user);
+
         return "redirect:/user/list";
     }
 
